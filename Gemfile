@@ -26,6 +26,15 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+# Use Chart.js for graphs
+gem 'chart-js-rails'
+gem 'momentjs-rails'
+
+# Import Bootstrap
+gem "jquery-rails"
+gem "bootstrap"
+gem "sassc-rails"
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 

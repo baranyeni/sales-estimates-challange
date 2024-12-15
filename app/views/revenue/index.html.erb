@@ -1,1 +1,40 @@
-<%= @app_ids %>
+<div class="d-flex flex-column justify-content-center w-100 h-100">
+
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <h1 class="fw-light text-white m-0">Itunes Revenue</h1>
+
+    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+      <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        App ID
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <% @app_ids.each do |app_id| %>
+          <li><a class="dropdown-item" href="#"><%= app_id %></a></li>
+        <% end %>
+      </ul>
+      <button type="button" class="btn btn-secondary datepicker">1</button>
+      <button type="button" class="btn btn-secondary datepicker">2</button>
+    </div>
+  </div>
+</div>
+
+<div class="input-group date" id="datepicker">
+  <input type="text" class="form-control" id="date"/>
+  <span class="input-group-append">
+          <span class="input-group-text bg-light d-block">
+            <i class="fa fa-calendar"></i>
+          </span>
+        </span>
+</div>
+
+<div data-controller="barchart">
+  <canvas id="bar-chart" data-barchart-target="myChart" width="800" height="450"></canvas>
+</div>
+
+<script>
+    document.addEventListener("turbo:load", function () {
+        console.log("Turbo loaded, initializing jQuery...");
+
+
+    });
+</script>
