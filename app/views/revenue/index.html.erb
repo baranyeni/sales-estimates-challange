@@ -19,7 +19,7 @@
     </div>
 
     <div id="revenue-chart" data-controller="barchart" data-barchart-revenue-value="[]">
-      <canvas data-barchart-target="revenueChart" width="500" height="250"></canvas>
+      <canvas data-barchart-target="revenueChart" width="1000" height="475"></canvas>
     </div>
   </div>
 </div>
@@ -39,10 +39,23 @@
 
     submitButton.addEventListener('click', function () {
       if (selectedAppId) {
-        const url = `/revenue/?app_id=${encodeURIComponent(selectedAppId)}`;
+        const dateRangeInput = document.querySelector('.daterangepicker-input');
+        const dateRange = $(dateRangeInput).val();
 
-        fetch(url, {
+        const [startDate, endDate] = dateRange.split(' - ');
+
+        const requestBody = {
+          app_id: selectedAppId,
+          start_date: startDate,
+          end_date: endDate
+        };
+
+        fetch('/revenue/', {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody)
         })
             .then(response => response.json())
             .then(data => {

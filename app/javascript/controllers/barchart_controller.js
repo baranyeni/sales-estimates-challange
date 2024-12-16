@@ -13,24 +13,28 @@ export default class extends Controller {
     return this.revenueChartTarget.getContext('2d');
   }
 
+  connect() {
+    this.chart = null;
+  }
+
   revenueValueChanged() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
     if (this.revenueValue.length > 0) {
       this.renderChart();
     }
   }
 
-  connect() {
-  }
-
   renderChart() {
     const labels = this.revenueValue.map(item => {
       const date = new Date(item.d);
-      return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`; // örneğin: 1/1/2014
+      return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     });
 
     const data = this.revenueValue.map(item => item.ir);
 
-    new Chart(this.canvasContext(), {
+    this.chart = new Chart(this.canvasContext(), {
       type: 'line',
       data: {
         labels: labels,
@@ -38,30 +42,22 @@ export default class extends Controller {
           label: 'Revenue',
           data: data,
           fill: false,
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgb(255,255,255)',
-          color: 'rgb(255,255,255)',
           tension: 0.01,
-          borderWidth: 2,
+          borderWidth: 0.85,
         }]
       },
       options: {
         responsive: true,
         scales: {
           y: {
-            title: {
-              display: true,
-              text: 'Revenue (IR)'
-            },
-            ticks: {
-              stepSize: 1
-            }
+            title: { display: true, text: 'Revenue (IR)', color: "rgba(255,255,255,0.35)" },
+            ticks: { color: "rgba(255,255,255,0.35)", stepSize: 1 },
+            grid: { color: "rgba(255,255,255,0.35)" }
           },
           x: {
-            title: {
-              display: true,
-              text: 'Date'
-            }
+            title: { display: false },
+            ticks: { color: "rgba(255,255,255,0.35)" },
+            grid: { color: "rgba(255,255,255,0.35)" }
           }
         },
         plugins: {
