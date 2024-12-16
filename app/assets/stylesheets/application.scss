@@ -15,12 +15,34 @@
  */
 
 @import "bootstrap";
+@import url("https://cdn.jsdelivr.net/gh/alumuko/vanilla-datetimerange-picker@latest/dist/vanilla-datetimerange-picker.css");
 
 body {
-    background: linear-gradient(-45deg, #eeb752, #3f529e, #23a6d5, #23d5ab);
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
-    height: 100vh;
+  background: linear-gradient(-45deg, #eeb752, #3f529e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  height: 100vh;
+}
+
+.header {
+  padding: 25px;
+}
+
+.app-parameters-wrapper {
+  width: 70vw;
+}
+
+.app-id-dropdown {
+  height: 350px;
+  overflow: scroll;
+}
+
+.daterangepicker-input {
+  text-align: center;
+  position: initial;
+  top: initial;
+  left: initial;
+  margin-top: 0px;
 }
 
 @keyframes gradient {

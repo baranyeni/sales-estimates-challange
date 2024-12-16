@@ -7,4 +7,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "revenue#index"
+
+  post "revenue" => "revenue#show"
 end

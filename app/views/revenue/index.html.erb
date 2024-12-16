@@ -1,40 +1,58 @@
 <div class="d-flex flex-column justify-content-center w-100 h-100">
 
   <div class="d-flex flex-column justify-content-center align-items-center">
-    <h1 class="fw-light text-white m-0">Itunes Revenue</h1>
+    <h1 class="fw-light text-white m-0 header">Itunes Revenue</h1>
 
-    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+    <div class="input-group app-parameters-wrapper" role="group" aria-label="Button group with nested dropdown">
       <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
         App ID
       </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <ul class="dropdown-menu app-id-dropdown" aria-labelledby="dropdownMenuButton">
         <% @app_ids.each do |app_id| %>
-          <li><a class="dropdown-item" href="#"><%= app_id %></a></li>
+          <li><a class="dropdown-item" data-app-id="<%= app_id %>"><%= app_id %></a></li>
         <% end %>
       </ul>
-      <button type="button" class="btn btn-secondary datepicker">1</button>
-      <button type="button" class="btn btn-secondary datepicker">2</button>
+
+      <input class="form-control btn btn-outline-light daterangepicker-input" type="text" data-controller="daterangepicker">
+
+      <button id="submit_form" class="btn btn-outline-light" type="button">Get</button>
+    </div>
+
+    <div id="revenue-chart" data-controller="barchart" data-barchart-revenue-value="[]">
+      <canvas data-barchart-target="revenueChart" width="500" height="250"></canvas>
     </div>
   </div>
 </div>
 
-<div class="input-group date" id="datepicker">
-  <input type="text" class="form-control" id="date"/>
-  <span class="input-group-append">
-          <span class="input-group-text bg-light d-block">
-            <i class="fa fa-calendar"></i>
-          </span>
-        </span>
-</div>
-
-<div data-controller="barchart">
-  <canvas id="bar-chart" data-barchart-target="myChart" width="800" height="450"></canvas>
-</div>
-
 <script>
-    document.addEventListener("turbo:load", function () {
-        console.log("Turbo loaded, initializing jQuery...");
+  document.addEventListener("turbo:load", function () {
+    const appDropdownItems = document.querySelectorAll('.dropdown-item');
+    const submitButton = document.querySelector('#submit_form');
+    let selectedAppId = null;
 
-
+    appDropdownItems.forEach(item => {
+      item.addEventListener('click', function (event) {
+        selectedAppId = event.target.getAttribute('data-app-id');
+        document.getElementById("dropdownMenuButton").textContent = selectedAppId;
+      });
     });
+
+    submitButton.addEventListener('click', function () {
+      if (selectedAppId) {
+        const url = `/revenue/?app_id=${encodeURIComponent(selectedAppId)}`;
+
+        fetch(url, {
+          method: 'POST',
+        })
+            .then(response => response.json())
+            .then(data => {
+              $('#revenue-chart')[0].dataset.barchartRevenueValue = JSON.stringify(data);
+            })
+            .catch(error => console.error('Error:', error));
+
+      } else {
+        alert("Please select an App ID");
+      }
+    });
+  });
 </script>

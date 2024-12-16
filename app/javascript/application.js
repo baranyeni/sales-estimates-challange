@@ -8,3 +8,6 @@ import "popper"
 import "bootstrap"
 
 import 'chart.js'
+
+import moment from 'moment'
+window.moment = moment

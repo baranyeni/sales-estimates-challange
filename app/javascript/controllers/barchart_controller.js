@@ -1,49 +1,79 @@
-import {Controller} from "@hotwired/stimulus"
-
+import { Controller } from "@hotwired/stimulus";
 import { Chart, registerables } from "chart.js";
+
 Chart.register(...registerables);
 
 export default class extends Controller {
-    static targets = ['myChart'];
+  static targets = ['revenueChart'];
+  static values = {
+    revenue: Array
+  }
 
-    canvasContext() {
-        return this.myChartTarget.getContext('2d');
+  canvasContext() {
+    return this.revenueChartTarget.getContext('2d');
+  }
+
+  revenueValueChanged() {
+    if (this.revenueValue.length > 0) {
+      this.renderChart();
     }
+  }
 
-    connect() {
-        new Chart(this.canvasContext(), {
-            type: 'bar',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+  connect() {
+  }
+
+  renderChart() {
+    const labels = this.revenueValue.map(item => {
+      const date = new Date(item.d);
+      return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`; // örneğin: 1/1/2014
+    });
+
+    const data = this.revenueValue.map(item => item.ir);
+
+    new Chart(this.canvasContext(), {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Revenue',
+          data: data,
+          fill: false,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgb(255,255,255)',
+          color: 'rgb(255,255,255)',
+          tension: 0.01,
+          borderWidth: 2,
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: 'Revenue (IR)'
             },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+            ticks: {
+              stepSize: 1
             }
-        });
-    }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Date'
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(tooltipItem) {
+                return `Revenue: ${tooltipItem.raw}`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
 }
