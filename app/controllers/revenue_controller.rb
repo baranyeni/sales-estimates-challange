@@ -13,7 +13,7 @@ class RevenueController < ApplicationController
     end_date = Date.strptime(revenue_params[:end_date].to_s, "%d/%m/%Y").mongoize rescue nil
 
     if app_id && start_date && end_date
-      result = get_time_series(app_id, start_date, end_date)
+      result = ItunesSalesReportEstimate.get_time_series(app_id, start_date, end_date)
       render json: result
     else
       render json: { error: 'Invalid parameters' }, status: :unprocessable_entity
@@ -21,20 +21,6 @@ class RevenueController < ApplicationController
   end
 
   private
-
-  def get_time_series(app_id, start_date, end_date)
-    ItunesSalesReportEstimate
-      .collection
-      .aggregate(
-        [{
-           "$match": {
-             "aid": app_id.to_i,
-             "d": { "$gte": start_date, "$lte": end_date },
-           }
-         },
-         { "$sort": { "d": 1 } }
-        ])
-  end
 
   def daily_cache_key
     @daily_cache_key ||= "index_options_cache_key_#{Time.now.to_i / 1.day}"

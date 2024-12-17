@@ -11,6 +11,21 @@ class ItunesSalesReportEstimate
   validates :country, presence: true
   validates :date, presence: true
 
+
+  def self.get_time_series(app_id, start_date, end_date)
+    ItunesSalesReportEstimate
+      .collection
+      .aggregate(
+        [{
+           "$match": {
+             "aid": app_id.to_i,
+             "d": { "$gte": start_date, "$lte": end_date },
+           }
+         },
+         { "$sort": { "d": 1 } }
+        ])
+  end
+
   def self.app_ids
     self.distinct(:app_id)
   end
