@@ -13,7 +13,7 @@ class RevenueController < ApplicationController
     end_date = Date.strptime(revenue_params[:end_date].to_s, "%d/%m/%Y").mongoize rescue nil
 
     if app_id && start_date && end_date
-      result = ItunesSalesReportEstimate.get_time_series(app_id, start_date, end_date)
+      result = ItunesSalesReportEstimate.get_revenue_by_date(app_id, start_date, end_date)
       render json: result
     else
       render json: { error: 'Invalid parameters' }, status: :unprocessable_entity

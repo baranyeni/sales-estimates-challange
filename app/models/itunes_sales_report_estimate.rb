@@ -14,7 +14,7 @@ class ItunesSalesReportEstimate
   validates :date, presence: true
 
 
-  def self.get_time_series(app_id, start_date, end_date)
+  def self.get_revenue_by_date(app_id, start_date, end_date)
     ItunesSalesReportEstimate
       .collection
       .aggregate(
@@ -26,6 +26,11 @@ class ItunesSalesReportEstimate
          },
          { "$sort": { "d": 1 } }
         ])
+  end
+
+  def self.get_time_series(app_id, start_date, end_date)
+    get_revenue_by_date(app_id, start_date, end_date)
+      .map {|r| r['ir']}
   end
 
   def self.app_ids
