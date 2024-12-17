@@ -1,5 +1,7 @@
 class ItunesSalesReportEstimate
   include Mongoid::Document
+  include TimeHelpers
+
   store_in collection: 'itunes_sales_report_estimate'
 
   field :d,   type: Time,    as: :date
@@ -19,7 +21,7 @@ class ItunesSalesReportEstimate
         [{
            "$match": {
              "aid": app_id.to_i,
-             "d": { "$gte": start_date, "$lte": end_date },
+             "d": { "$gte": utc_timezone(start_date), "$lte": utc_timezone(end_date) },
            }
          },
          { "$sort": { "d": 1 } }
